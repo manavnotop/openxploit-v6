@@ -1,7 +1,7 @@
 "use client"
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig } from "@/components/ui/chart"
 
 interface SeverityDistributionProps {
   critical: number
@@ -9,6 +9,26 @@ interface SeverityDistributionProps {
   medium: number
   low: number
 }
+
+const chartConfig = {
+  critical: {
+    label: "Critical",
+    color: "#ef4444",
+  },
+  high: {
+    label: "High",
+    color: "#f97316",
+  },
+  medium: {
+    label: "Medium",
+    color: "#eab308",
+  },
+  low: {
+    label: "Low",
+    color: "#22c55e",
+  },
+} satisfies ChartConfig
+
 
 export function SeverityDistribution({ critical = 0, high = 0, medium = 0, low = 0 }: SeverityDistributionProps) {
   // Ensure all values are numbers
@@ -35,7 +55,7 @@ export function SeverityDistribution({ critical = 0, high = 0, medium = 0, low =
   }
 
   return (
-    <ChartContainer>
+    <ChartContainer config={chartConfig}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie data={data} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="value">
@@ -48,13 +68,13 @@ export function SeverityDistribution({ critical = 0, high = 0, medium = 0, low =
               if (active && payload && payload.length) {
                 const data = payload[0].payload
                 return (
-                  <ChartTooltip>
-                    <ChartTooltipContent>
+                  <ChartTooltip content={<ChartTooltipContent />} >
+                    {/* <ChartTooltipContent>
                       <div className="flex flex-col gap-2">
                         <p className="text-sm font-medium">{data.name} Vulnerabilities</p>
                         <p className="text-2xl font-bold">{data.value}</p>
                       </div>
-                    </ChartTooltipContent>
+                    </ChartTooltipContent> */}
                   </ChartTooltip>
                 )
               }

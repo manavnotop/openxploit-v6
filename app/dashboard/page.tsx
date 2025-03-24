@@ -119,9 +119,9 @@ export default function DashboardPage() {
                   <CardDescription>Distribution of vulnerabilities by severity level</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {/* <div className="h-80">
+                  <div className="h-80">
                     <VulnerabilityChart data={vulnerabilities} />
-                  </div> */}
+                  </div>
                 </CardContent>
               </Card>
 
@@ -131,14 +131,14 @@ export default function DashboardPage() {
                   <CardDescription>Breakdown of vulnerability severity</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {/* <div className="h-80">
+                  <div className="h-80">
                     <SeverityDistribution
                       critical={criticalCount}
                       high={highCount}
                       medium={mediumCount}
                       low={lowCount}
                     />
-                  </div> */}
+                  </div>
                 </CardContent>
               </Card>
             </div>
