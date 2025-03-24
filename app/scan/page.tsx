@@ -20,15 +20,33 @@ export default function ScanPage() {
   const [envVars, setEnvVars] = useState([{ key: "", value: "" }])
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      router.push("/scan/loading")
-    }, 500)
-  }
+    try {
+      const response = await fetch("/api/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          scanType,
+          localUrl,
+          dockerImage,
+          envVars,
+        }),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        router.push("/scan/loading");
+      } else {
+        alert(result.error || "An error occurred");
+      }
+    } catch (error) {
+      console.error("Error submitting scan:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addEnvVar = () => {
     // Make sure envVars is an array before spreading

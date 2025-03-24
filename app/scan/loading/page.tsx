@@ -42,7 +42,7 @@ export default function LoadingPage() {
   }, [progress, router])
 
   return (
-    <div className="container flex items-center justify-center min-h-screen">
+    <div className="container mx-auto flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Scanning in Progress</CardTitle>
