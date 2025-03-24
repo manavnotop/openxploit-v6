@@ -43,7 +43,7 @@ export default function DashboardPage() {
   const recommendations = Array.isArray(scanResult.recommendations) ? scanResult.recommendations : []
 
   return (
-    <div className="container py-10">
+    <div className="container mx-auto py-10">
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Vulnerability Scan Results</h1>

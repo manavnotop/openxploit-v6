@@ -1,3 +1,5 @@
+import Header from "@/components/landing/header"
+import Footer from "@/components/landing/footer"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowRight } from "lucide-react"
@@ -6,21 +8,7 @@ import Link from "next/link"
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-          <h1 className="text-lg font-semibold">
-            <span className="text-primary">Open</span>Xploit
-          </h1>
-          <nav className="flex gap-6">
-            <Link href="/" className="text-sm font-medium hover:text-gray-700">
-              Home
-            </Link>
-            <Link href="/dashboard" className="text-sm font-medium hover:text-gray-700">
-              Dashboard
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header />
       <main className="flex-1">
         <section className="container mx-auto grid items-center gap-6 px-4 py-12 md:py-24 lg:py-32 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center gap-4 text-center">
@@ -77,21 +65,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <footer className="border-t py-6">
-        <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 md:flex-row">
-          <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} OpenXploit. All rights reserved.
-          </p>
-          <nav className="flex gap-4">
-            <Link href="#" className="text-sm text-muted-foreground hover:underline">
-              Terms
-            </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:underline">
-              Privacy
-            </Link>
-          </nav>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
