@@ -19,31 +19,80 @@ export default function ScanPage() {
   const [dockerImage, setDockerImage] = useState("")
   const [envVars, setEnvVars] = useState([{ key: "", value: "" }])
   const [loading, setLoading] = useState(false)
+  const [urlError, setUrlError] = useState("")
+  const [isValidating, setIsValidating] = useState(false)
+
+  const validateLocalUrl = (url: string) => {
+    if (!url) return "" // Don't show error for empty input
+    
+    try {
+      const urlObj = new URL(url)
+      if (urlObj.protocol !== 'http:') {
+        return "Only HTTP protocol is allowed"
+      }
+      const validHostnames = ['localhost', '127.0.0.1', 'host.docker.internal']
+      if (!validHostnames.some(host => urlObj.hostname.includes(host))) {
+        return "Only localhost, 127.0.0.1, or host.docker.internal URLs are allowed"
+      }
+      return ""
+    } catch (error) {
+      return "Please enter a valid URL"
+    }
+  }
+
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newUrl = e.target.value
+    setLocalUrl(newUrl)
+    
+    // Clear error if input is empty
+    if (!newUrl) {
+      setUrlError("")
+      return
+    }
+
+    // Add debounce to validation
+    setIsValidating(true)
+    setTimeout(() => {
+      const error = validateLocalUrl(newUrl)
+      setUrlError(error)
+      setIsValidating(false)
+    }, 300)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (scanType === "local") {
+      const error = validateLocalUrl(localUrl)
+      if (error) {
+        setUrlError(error)
+        return
+      }
+      setUrlError("")
+    }
+
     setLoading(true);
 
     try {
-      const response = await fetch("/api/scan", {
+      // Start the API request but don't await it
+      fetch("/api/full-scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          url: localUrl,
           scanType,
-          localUrl,
           dockerImage,
           envVars,
         }),
+      }).catch(error => {
+        console.error("Error in background scan:", error);
       });
-      const result = await response.json();
-      if (response.ok) {
-        router.push("/scan/loading");
-      } else {
-        alert(result.error || "An error occurred");
-      }
+
+      // Navigate to loading page immediately
+      router.push("/scan/loading");
     } catch (error) {
-      console.error("Error submitting scan:", error);
-    } finally {
+      console.error("Error initiating scan:", error);
+      alert("Failed to start scan. Please try again.");
       setLoading(false);
     }
   };
@@ -118,13 +167,29 @@ export default function ScanPage() {
                 <div className="grid gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="local-url">Application URL</Label>
-                    <Input
-                      id="local-url"
-                      placeholder="http://localhost:3000"
-                      value={localUrl}
-                      onChange={(e) => setLocalUrl(e.target.value)}
-                      required={scanType === "local"}
-                    />
+                    <div className="relative">
+                      <Input
+                        id="local-url"
+                        placeholder="http://localhost:3000"
+                        value={localUrl}
+                        onChange={handleUrlChange}
+                        required={scanType === "local"}
+                        className={urlError ? "border-red-500" : ""}
+                      />
+                      {isValidating && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          <div className="animate-spin h-4 w-4 border-2 border-gray-300 border-t-gray-600 rounded-full"></div>
+                        </div>
+                      )}
+                    </div>
+                    {urlError && (
+                      <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {urlError}
+                      </p>
+                    )}
                   </div>
                 </div>
               </CardContent>
