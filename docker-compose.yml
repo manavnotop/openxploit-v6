@@ -1,0 +1,64 @@
+# Use a recent Docker Compose file format version
+version: '3.8'
+
+# Define the services (containers) that make up your application
+services:
+  # Service for your Next.js application
+  openxploit:
+    # Build the image from the current directory where the Dockerfile is located
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Map ports from the host to the container.
+    # "1443:3000" means host's port 1443 will forward to container's port 3000.
+    # Note: Port 1443 is typically used for HTTPS. If your Next.js app is not
+    # configured for HTTPS directly, you will access it via http://localhost:1443.
+    # For true HTTPS, you'd usually add a reverse proxy (like Nginx/Caddy) to handle SSL.
+    ports:
+      - "1443:3000"
+    # Set environment variables for the Next.js application
+    environment:
+      # Next.js will listen on this port *inside* the container
+      PORT: 3000
+      # Disable Next.js telemetry for production builds in Docker
+      NEXT_TELEMETRY_DISABLED: 1
+      # Add any other environment variables your Next.js app needs
+    # Ensure the container restarts if it stops unexpectedly
+    restart: unless-stopped
+    # Mount a volume for persistent data for your local-first Next.js app.
+    # This ensures data stored by your Next.js application persists across container restarts.
+    # It maps the 'data' folder in your host machine to '/app/data' inside the container.
+    volumes:
+      - ./data:/app/data
+
+  # Service for OWASP ZAP (Zed Attack Proxy)
+  zap:
+    # Use the official zaproxy/zap-stable Docker image
+    image: zaproxy/zap-stable
+    # Map ports from the host to the container.
+    # Host's port 8090 will forward to container's port 8090.
+    ports:
+      - "8090:8090"
+    # Define the command to run when the container starts.
+    # This mirrors the 'docker run' command you provided for ZAP.
+    # Each argument is an item in the list, or a single string with all arguments.
+    command:
+      - zap.sh
+      - -daemon
+      - -host
+      - 0.0.0.0
+      - -port
+      - "8090"
+      - -config
+      - "api.addrs.addr.name=.*"
+      - -config
+      - "api.addrs.addr.regex=true"
+      - -config
+      - "api.disablekey=true"
+    # Ensure the container restarts if it stops unexpectedly
+    restart: unless-stopped
+    # Optional: Mount a volume for ZAP's data, logs, or reports if needed
+    # This will ensure any ZAP session data or generated reports are persistent.
+    # For example, to save ZAP's workspace:
+    # volumes:
+    #   - ./zap_data:/zap/wrk
