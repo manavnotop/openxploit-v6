@@ -91,8 +91,8 @@ export default function DashboardContent() {
       // Only use mock data if the API is completely unavailable
       if (err instanceof TypeError && err.message.includes('Failed to fetch')) {
         console.log("API not available, using mock data instead")
-        setVulnerabilities(mockVulnerabilities)
-        setFilteredVulnerabilities(mockVulnerabilities)
+        // setVulnerabilities(mockVulnerabilities)
+        // setFilteredVulnerabilities(mockVulnerabilities)
       } else {
         setError(err instanceof Error ? err.message : "Failed to fetch vulnerability data")
       }
@@ -152,7 +152,7 @@ export default function DashboardContent() {
     const counts = {
       high: vulnerabilities.filter((v) => v.risk.toLowerCase() === "high").length,
       medium: vulnerabilities.filter((v) => v.risk.toLowerCase() === "medium").length,
-      low: vulnerabilities.filter((v) => v.risk.toLowerCase() === "informational").length,
+      low: vulnerabilities.filter((v) => v.risk.toLowerCase() === "low").length,
       info: vulnerabilities.filter((v) => v.risk.toLowerCase() === "informational").length,
       total: vulnerabilities.length,
     }
@@ -181,7 +181,7 @@ export default function DashboardContent() {
   return (
     <div>
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium">Total Vulnerabilities</CardTitle>
@@ -220,8 +220,19 @@ export default function DashboardContent() {
             <AlertCircle className="h-5 w-5 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-blue-500">{counts.low + counts.info}</div>
+            <div className="text-3xl font-bold text-blue-500">{counts.low}</div>
             <p className="text-xs text-muted-foreground mt-1">Low severity issues</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-lg font-medium">Informational</CardTitle>
+            <AlertCircle className="h-5 w-5 text-gray-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-gray-500">{counts.info}</div>
+            <p className="text-xs text-muted-foreground mt-1">Information only</p>
           </CardContent>
         </Card>
       </div>
@@ -255,6 +266,9 @@ export default function DashboardContent() {
           </TabsTrigger>
           <TabsTrigger value="low" className="text-blue-500">
             Low
+          </TabsTrigger>
+          <TabsTrigger value="informational" className="text-gray-500">
+            Informational
           </TabsTrigger>
         </TabsList>
 
