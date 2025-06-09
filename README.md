@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛡️ OpenXploit - Local-First Vulnerability Scanner
 
-## Getting Started
+**OpenXploit** is a local-first application that helps you assess vulnerabilities in any app running on your machine. Just enter a local URL or a Docker image name, and OpenXploit handles everything — from setup to scanning — **completely offline**.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- 🔎 Spider Scan followed by Active Scan
+- 🖥️ Scan any **localhost** app or a **Dockerized** app
+- 📊 Categorized vulnerabilities:
+  - **High**
+  - **Medium**
+  - **Low**
+  - **Informational**
+- 🧪 Full scan pipeline
+- 🧠 One-command install (Coolify-style)
+- 📈 Clean dashboard UI
+
+---
+
+## 📦 Tech Stack
+
+- **Frontend:** Next.js (App Router)
+- **UI:** ShadCN UI + Tailwind CSS
+- **Animation:** Framer Motion
+- **Scanner:** OWASP ZAP (via Docker)
+- **Deployment:** Local-first only (no cloud!)
+
+---
+
+## 🧑‍💻 Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/openxploit.git
+cd openxploit
+```
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Run the App
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open: [http://localhost:1443](http://localhost:1443)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧪 Usage Flow
 
-## Learn More
+```text
+[1] Enter URL or Docker image
+     ↓
+[2] Build and run container (if Docker)
+     ↓
+[3] Run Spider Scan
+     ↓
+[4] Run Active Scan
+     ↓
+[5] View vulnerabilities on dashboard
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧬 One-Command Install (Optional)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+curl -sSL openxploit.sh | bash
+```
 
-## Deploy on Vercel
+This will set up everything for you locally — just like Coolify.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

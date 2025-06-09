@@ -55,7 +55,7 @@ export default function DashboardContent() {
     setError(null)
     try {
       const response = await fetch(
-        "http://localhost:3001/api/proxy?apikey=&baseurl=http://host.docker.internal:3000",
+        "http://localhost:1443/api/proxy?apikey=&baseurl=http://host.docker.internal:3000",
         {
           method: "GET",
           headers: {
